@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" id="http://opera.com" version="1.0" viewmodes="minimized">
+    <name>TED: Ideas worth spreading</name>
+    <description>Stay up-to-date with latest TED talks.</description>
+    <author href="http://opera.com">Opera Software ASA</author>
+    <icon src="img/icon.png" />
+    <feature name="opera:speeddial" required="true">
+		<param name="url" value="http://ted.com/" />
+    </feature>
+	<access origin="*"/>
+	<preference name="feedsToRetrivePref" value="10" />
+	<preference name="feedsDisplayTimePref" value="5" />
+</widget>
