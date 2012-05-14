@@ -11,7 +11,7 @@
 	}
 	
 	function addClass(elementId, clsName) {
-		document.getElementById(elementId).className += " " + clsName;
+		document.getElementById(elementId).className = clsName;
 	}
 	
 	function removeClass(elementId, clsName) {
@@ -20,6 +20,7 @@
 	}
 	
 	function getFeedsFromUrl() {
+		removeClass("error_container", "active");
 		removeClass("feeds_container", "active");
 		addClass("splash_screen_container", "active");
 		addClass("loader_container", "active");
@@ -40,17 +41,28 @@
 	function parseRetrievedFeeds(xhrResp) {
 		var xmlFeeds = xhrResp.querySelectorAll("item, entry");
 		
-		if(xmlFeeds.length == 0) {
-			document.getElementById("error_container").innerHTML = "No data retrived."
+		if(xmlFeeds == "undefined" || xhrResp.childNodes.length == 0) {
+			removeClass("feeds_container", "active");
+			removeClass("loader_container", "active");
+			removeClass("splash_screen_container", "active");
+			addClass("error_container", "active");
+			document.getElementById("error_container").innerHTML = "Error!<br /><br />No data retrived. Please check your connection and try again."
 			return;
 		}
 		
+		document.getElementById("feeds_container").innerHTML = "<span class='ted_banner'><img src='img/stripe.png' /></span>";
+		
 		for(var i = 0; i < feedsToRetrive; i++) {
 			feeds[i] = [];
-			feeds[i][0] = "<div class='single_feed'><span class='single_feed_banner'><img src='img/stripe.png' /></span><span class='single_feed_img'><img src='" + xmlFeeds[i].querySelector("image").getAttribute("url") + "' /></span><span class='single_feed_title'>" + xmlFeeds[i].querySelector("subtitle").textContent + "</span></div>";
-			feeds[i][1] = xmlFeeds[i].querySelector("origLink").textContent;
+			feeds[i][0] = xmlFeeds[i].querySelector("image").getAttribute("url");
+			feeds[i][1] = xmlFeeds[i].querySelector("subtitle").textContent;
+			feeds[i][2] = xmlFeeds[i].querySelector("origLink").textContent;
 			
-			//document.getElementById("feeds_container").innerHTML += feeds[i][0];
+			if(feeds[i][0].replace(/\s/g, "") == "") {
+				feeds[i][0] = "img/default.png";
+			}
+			
+			document.getElementById("feeds_container").innerHTML += "<div class='single_feed'><span class='single_feed_img'><img src='" + feeds[i][0] + "' /></span><span class='single_feed_title'>" + feeds[i][1] + "</span></div>";
 		}
 		
 		feedsLoaded = true;
@@ -58,22 +70,36 @@
 	
 	document.addEventListener("DOMContentLoaded", function() {
 		getFeedsFromUrl();
-		
+
 		var j = 0;
+		var feedsCntEl = document.getElementById("feeds_container");
+		var reg = new RegExp("(\\s|^)active(\\s|$)");
 		
 		var interval = window.setInterval(function() {
 			if(feedsLoaded) {
+				removeClass("error_container", "active");
 				removeClass("loader_container", "active");
 				removeClass("splash_screen_container", "active");
 				addClass("feeds_container", "active");
 				feedsLoaded = false;
 			}
-			document.getElementById("feeds_container").innerHTML = feeds[j][0];
-			if (opera.contexts.speeddial) {
-				opera.contexts.speeddial.url = feeds[j][1];
-				opera.contexts.speeddial.title = "TED: Ideas worth spreading (" + (j + 1) + "/" + feedsToRetrive + ")";
+			
+			feedsCntEl.children[j+1].className += " active";
+			
+			if(j == 0 && feedsCntEl.children[feedsToRetrive].className.indexOf("active") != -1) {
+				feedsCntEl.children[feedsToRetrive].className = feedsCntEl.children[feedsToRetrive].className.replace(reg, "");
+			} else {
+				feedsCntEl.children[j].className = feedsCntEl.children[j].className.replace(reg, "");
 			}
+			
+			
+			if (opera.contexts.speeddial) {
+				opera.contexts.speeddial.url = feeds[j][2];
+				//opera.contexts.speeddial.title = "TED: Ideas worth spreading (" + (j + 1) + "/" + feedsToRetrive + ")";
+			}
+			
 			j++;
+			
 			if(j == feedsToRetrive) {
 				j = 0;
 			}
@@ -94,17 +120,28 @@
 				
 				interval = window.setInterval(function() {
 					if(feedsLoaded) {
+						removeClass("error_container", "active");
 						removeClass("loader_container", "active");
 						removeClass("splash_screen_container", "active");
 						addClass("feeds_container", "active");
 						feedsLoaded = false;
-					}				
-					document.getElementById("feeds_container").innerHTML = feeds[j][0];
-					if (opera.contexts.speeddial) {
-						opera.contexts.speeddial.url = feeds[j][1];
-						opera.contexts.speeddial.title = "TED: Ideas worth spreading (" + (j + 1) + "/" + feedsToRetrive + ")";
 					}
+					
+					feedsCntEl.children[j+1].className += " active";
+			
+					if(j == 0 && feedsCntEl.children[feedsToRetrive].className.indexOf("active") != -1) {
+						feedsCntEl.children[feedsToRetrive].className = feedsCntEl.children[feedsToRetrive].className.replace(reg, "");
+					} else {
+						feedsCntEl.children[j].className = feedsCntEl.children[j].className.replace(reg, "");
+					}
+					
+					if (opera.contexts.speeddial) {
+						opera.contexts.speeddial.url = feeds[j][2];
+						//opera.contexts.speeddial.title = "TED: Ideas worth spreading (" + (j + 1) + "/" + feedsToRetrive + ")";
+					}
+					
 					j++;
+					
 					if(j == feedsToRetrive) {
 						j = 0;
 					}

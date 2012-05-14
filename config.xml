@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget xmlns="http://www.w3.org/ns/widgets" id="http://opera.com" version="1.0" viewmodes="minimized">
+<widget xmlns="http://www.w3.org/ns/widgets" id="http://opera.com" version="1.2" viewmodes="minimized">
     <name>TED: Ideas worth spreading</name>
     <description>Stay up-to-date with latest TED talks.</description>
     <author href="http://opera.com">Opera Software ASA</author>
@@ -9,5 +9,5 @@
     </feature>
 	<access origin="*"/>
 	<preference name="feedsToRetrivePref" value="10" />
-	<preference name="feedsDisplayTimePref" value="5" />
+	<preference name="feedsDisplayTimePref" value="10" />
 </widget>
