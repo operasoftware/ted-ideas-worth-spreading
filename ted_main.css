@@ -73,10 +73,10 @@ body {
 
 #feeds_container .ted_banner {
 	position: absolute;
-	left: 10px;
-	top: 10px;	
+	left: 3%;
+	top: 4%;	
 	display: block;
-	width: 93px;
+	width: 57px;
 	z-index: 10000;
 }
 
@@ -84,13 +84,6 @@ body {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	display: none;	
-}
-
-#feeds_container .single_feed .ted_banner img {
-	position: absolute;
-	left: 10px;
-	top: 10px;
 }
 
 #feeds_container .single_feed .single_feed_img {
